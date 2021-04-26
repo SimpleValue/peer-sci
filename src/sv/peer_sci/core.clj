@@ -27,7 +27,9 @@
   {'org.joda.time.LocalDateTime org.joda.time.LocalDateTime
    'org.joda.time.DateTimeZone org.joda.time.DateTimeZone
    'java.util.Date java.util.Date
-   'System java.lang.System})
+   'System java.lang.System
+   'Long java.lang.Long
+   })
 
 (defn eval-code
   [params]
