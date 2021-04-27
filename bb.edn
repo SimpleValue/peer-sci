@@ -1,0 +1,26 @@
+{:tasks {:init (do
+                 (require '[clojure.edn :as edn])
+                 (def config
+                   (edn/read-string (slurp "config.edn"))))
+         build-base-image (shell "docker" "build" "-t"
+                                 (:base-image config)
+                                 ".")
+         push-base-image {:depends [build-base-image]
+                          :task (shell "docker push"
+                                       (:base-image config))}
+         aot (do
+               (shell "mkdir -p classes")
+               (clojure "-e"
+                        "(compile 'sv.peer-sci.main)"))
+         pack {:depends [aot]
+               :task (clojure "-M:pack" "mach.pack.alpha.jib"
+                              "--image-name" (:image config)
+                              "--image-type" "docker"
+                              "--base-image" (:base-image config)
+                              "--extra-java-args" "-XX:MaxRAMPercentage=90"
+                              "-m" "sv.peer-sci.main")}
+         push {:depends [pack]
+               :task (shell "docker"
+                            "push"
+                            (:image config))}
+         build {:depends [push-base-image push]}}}
