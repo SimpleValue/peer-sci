@@ -1,26 +1,42 @@
 {:tasks {:init (do
                  (require '[clojure.edn :as edn])
                  (def config
-                   (edn/read-string (slurp "config.edn"))))
+                   (edn/read-string (slurp "config.edn")))
+
+                 (def tag
+                   (.format (java.time.format.DateTimeFormatter/ofPattern
+                             "yyyyMMddHHmmss")
+                            (java.time.LocalDateTime/now)))
+
+                 (def base-image
+                   (str (:base-image config)
+                        ":"
+                        tag))
+
+                 (def image
+                   (str (:image config)
+                        ":"
+                        tag))
+                 )
          build-base-image (shell "docker" "build" "-t"
-                                 (:base-image config)
+                                 base-image
                                  ".")
          push-base-image {:depends [build-base-image]
                           :task (shell "docker push"
-                                       (:base-image config))}
+                                       base-image)}
          aot (do
                (shell "mkdir -p classes")
                (clojure "-e"
                         "(compile 'sv.peer-sci.main)"))
          pack {:depends [aot]
                :task (clojure "-M:pack" "mach.pack.alpha.jib"
-                              "--image-name" (:image config)
+                              "--image-name" image
                               "--image-type" "docker"
-                              "--base-image" (:base-image config)
+                              "--base-image" base-image
                               "--extra-java-args" "-XX:MaxRAMPercentage=90"
                               "-m" "sv.peer-sci.main")}
          push {:depends [pack]
                :task (shell "docker"
                             "push"
-                            (:image config))}
+                            image)}
          build {:depends [push-base-image push]}}}
