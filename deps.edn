@@ -1,4 +1,12 @@
 {:mvn/repos {"my.datomic.com" {:url "https://my.datomic.com/repo"}}
+ :aliases {:pack
+           {:extra-deps
+            {pack/pack.alpha
+             {:git/url "https://github.com/juxt/pack.alpha"
+              :sha "e518d9b2b70f4292c9988d2792b8667d88a6f4df"
+              :exclusions [org.slf4j/slf4j-nop]}}
+            :main-opts
+            ["-m"]}}
  :deps {http-kit/http-kit {:mvn/version "2.5.3"}
         com.datomic/datomic-pro {:mvn/version "0.9.5561"
                                  :exclusions [org.slf4j/log4j-over-slf4j
