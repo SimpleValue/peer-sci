@@ -35,11 +35,11 @@
   [params]
   (sci/eval-string
    (:code params)
-   {:namespaces (time (namespaces-import
-                       (distinct
-                        (concat
-                         (:namespaces params)
-                         default-namespaces))))
+   {:namespaces (namespaces-import
+                 (distinct
+                  (concat
+                   (:namespaces params)
+                   default-namespaces)))
     :classes (merge default-classes
                     (:classes params))}))
 
