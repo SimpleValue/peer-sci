@@ -3,6 +3,7 @@
             [sv.peer-sci.state :as state]
             [sv.peer-sci.nrepl :as nrepl]
             [sv.peer-sci.core :as core]
+            [sv.slf4j-gke-logging.core :as gke-logging]
             [datomic.api :as d])
   (:gen-class))
 
@@ -25,6 +26,11 @@
 
 (defn start!
   []
+  (gke-logging/start!
+   {:log! (fn [log-message]
+            (when (not (#{"DEBUG" "TRACE"} (get log-message
+                                                "level")))
+              (gke-logging/log! log-message)))})
   (swap! state/state
          assoc
          :datomic/con

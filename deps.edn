@@ -20,4 +20,8 @@
         borkdude/sci {:mvn/version "0.2.4"}
         nrepl/nrepl {:mvn/version "0.8.3"}
         clj-time/clj-time {:mvn/version "0.14.2"}
+
+        sv/slf4j-gke-logging {:git/url "https://github.com/SimpleValue/slf4j-gke-logging.git"
+                              :sha "c38208f38de21e4de4f67a48c62dab9463cc8a89"}
+
         }}
