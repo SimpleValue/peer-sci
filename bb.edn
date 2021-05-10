@@ -6,7 +6,8 @@
                  (def tag
                    (.format (java.time.format.DateTimeFormatter/ofPattern
                              "yyyyMMddHHmmss")
-                            (java.time.LocalDateTime/now)))
+                            (java.time.LocalDateTime/now
+                             java.time.ZoneOffset/UTC)))
 
                  (def base-image
                    (str (:base-image config)
