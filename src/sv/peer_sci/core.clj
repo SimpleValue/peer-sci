@@ -41,7 +41,11 @@
                    (:namespaces params)
                    default-namespaces)))
     :classes (merge default-classes
-                    (:classes params))}))
+                    (into {}
+                          (map
+                           (fn [[sym class-sym]]
+                             [sym (Class/forName (str class-sym))])
+                           (:classes params))))}))
 
 (comment
   (eval-code {:code (pr-str '(range 10))})
