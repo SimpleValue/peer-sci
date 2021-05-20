@@ -26,13 +26,14 @@
   (let [db (con/db)]
     (into {}
           (map
-           (fn [[index-id datoms-future]]
-             [index-id (count (deref datoms-future))])
+           (fn [[index-id future]]
+             [index-id (deref future)])
            (doall
             (map (fn [index-id]
                    [index-id
-                    (future (prewarm-index! db
-                                            index-id))])
+                    (future (count
+                             (prewarm-index! db
+                                             index-id)))])
                  index-ids))))))
 
 (comment
